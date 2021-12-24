@@ -219,11 +219,12 @@ class OpenIDConnect extends PluggableAuth {
 					}
 				}
 
-				//$username = self::getAvailableUsername( $preferred_username,
-				//	$realname, $email );
-
-				//wfDebugLog( 'OpenID Connect', 'Available username: ' .
-				//	$username . PHP_EOL );
+				if ( User::idFromName( $preferred_username ) === null ) {
+					// If there is no user ID from MW that matches the
+					// $preferred_username, exit early so that we don't
+					// auto-create it.
+					return false;
+				}
 				$username = $preferred_username;
 
 				if ( method_exists( MediaWikiServices::class, 'getAuthManager' ) ) {
